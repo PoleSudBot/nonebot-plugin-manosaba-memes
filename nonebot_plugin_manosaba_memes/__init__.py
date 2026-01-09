@@ -1,41 +1,54 @@
-import re
 from collections import defaultdict
+import re
 
-from nonebot import require, on_regex
+from nonebot import on_regex, require
 from nonebot.internal.adapter import Bot, Event
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 
 require("nonebot_plugin_alconna")
 
-from nonebot_plugin_alconna import (  # noqa: E402
-    Args,
+from nonebot_plugin_alconna import (
     Alconna,
+    Args,
     Arparma,
-    on_alconna,
-    UniMessage,
     CommandMeta,
+    UniMessage,
+    on_alconna,
 )
 
-from .models import Option  # noqa: E402
-from .drawer import draw_anan, draw_trial  # noqa: E402
-from .utils import get_statement, get_character  # noqa: E402
-
-
-usage = """
-安安说 [文本] [表情]
-    表情可选：害羞, 生气, 病娇, 无语, 开心
-切换角色 [角色名]
-    角色名可选：艾玛, 希罗
-发送格式如下的消息以生成审判表情包：
-【疑问/反驳/伪证/赞同/魔法:[角色名]】这是一个选项文本
-    角色名可选：梅露露, 诺亚, 汉娜, 奈叶香, 亚里沙, 米莉亚, 雪莉, 艾玛, 玛格, 安安, 可可, 希罗, 蕾雅
-    可发送多行以添加多个选项
-""".strip()
+from .drawer import draw_anan, draw_trial
+from .models import Option
+from .utils import get_character, get_statement
 
 __plugin_meta__ = PluginMetadata(
     name="魔裁 Memes",
     description="生成「魔法少女的魔法审判」的表情包",
-    usage=usage,
+    usage="""
+🎨 安安说 (举牌生成)
+• 安安说 [文本] [表情]
+  └─ 让安安举起素描本
+  表情：害羞/生气/病娇/无语/开心 (可选)
+  💡 提示：内容中【中括号包裹】的文字会变成紫色
+  示例：**安安说 吾辈命令你【去炒两个菜】 生气**
+
+⚖️ 审判选项 (直接发送)
+• 【类型】[文本]
+  └─ 生成审判选项图 (支持多行/多选项)
+  类型：疑问/反驳/伪证/赞同
+  示例：
+  `【伪证】我没有吃布丁`
+  `【疑问】嘴角有残渣`
+
+✨ 魔法选项
+• 【魔法:[角色]】[文本]
+  └─ 生成魔法技能选项
+  示例：`【魔法:诺亚】液体操控`
+  支持角色：诺亚/汉娜/雪莉/艾玛/希罗等
+
+🔄 其他设置
+• 切换角色 [艾玛/希罗]
+  └─ 切换审判图右侧的立绘角色
+""",
     type="application",
     homepage="https://github.com/zhaomaoniu/nonebot-plugin-manosaba-memes",
     supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna"),
